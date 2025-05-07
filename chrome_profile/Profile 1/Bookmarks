@@ -1,0 +1,48 @@
+{
+   "checksum": "8c4b46398382dd675f7f3b03b0cd2708",
+   "roots": {
+      "bookmark_bar": {
+         "children": [  ],
+         "date_added": "13391104542308757",
+         "date_last_used": "0",
+         "date_modified": "0",
+         "guid": "0bc5d13f-2cba-5d74-951f-3f233fe6c908",
+         "id": "1",
+         "name": "Barra de marcadores",
+         "type": "folder"
+      },
+      "other": {
+         "children": [ {
+            "date_added": "13387582186294021",
+            "date_last_used": "0",
+            "guid": "c03c87ca-05b8-4a7d-9df0-cdd1fab46cbc",
+            "id": "5",
+            "meta_info": {
+               "power_bookmark_meta": ""
+            },
+            "name": "Páginas - GreatApps",
+            "type": "url",
+            "url": "https://app.greatpages.com.br/paginas/editar/1997778"
+         } ],
+         "date_added": "13391104542308760",
+         "date_last_used": "0",
+         "date_modified": "13387582186294021",
+         "guid": "82b081ec-3dd3-529c-8475-ab6c344590dd",
+         "id": "2",
+         "name": "Otros marcadores",
+         "type": "folder"
+      },
+      "synced": {
+         "children": [  ],
+         "date_added": "13391104542308766",
+         "date_last_used": "0",
+         "date_modified": "0",
+         "guid": "4cf2e351-0e85-532b-bb37-df045d8f8d0f",
+         "id": "3",
+         "name": "Marcadores móvil",
+         "type": "folder"
+      }
+   },
+   "sync_metadata": "Cr0CCpwCCIiBAhKVAiAAkgGPAgqMAgoOY2hyb21lX3N5bmNfYm0SBTUxIWJtGhIJecp9NY00BgARecp9NY00BgAiNAmSuVQ1jTQGABADGWir4+arGMrOIAEqHDUxIWJtL2ZkOjkxNjM3MjM1NTk0Njg4OTMxNjEiNAmSuVQ1jTQGABADGWir4+arGMrOIAEqHDUxIWJtL2ZkOjkxNjM3MjM1NTk0Njg4OTMxNjEiNAmSuVQ1jTQGABADGWir4+arGMrOIAEqHDUxIWJtL2ZkOjkxNjM3MjM1NTk0Njg4OTMxNjEiNAmSuVQ1jTQGABADGWir4+arGMrOIAEqHDUxIWJtL2ZkOjkxNjM3MjM1NTk0Njg4OTMxNjEped19NY00BgASACoYbVZVYjdZZ1RPbDlMa2tKcEhFRTFGUT09SAMSwwEIAhK+AQocWWNTVG9udkVTUHdxQ3M0TDJjclZodjY4TDk4PRJmWjpBRHF0QVp4azNNN2tSQUFCSGs3ZUNjSG5nL3NjYWlrM0RFRmIvVFVqWWF5OXNVM3JqQzQydldvYnY4bUZNbHRVVzFHV2Q0QkhSdlZ3bk5LTUJUclEwaEF1bUt1ekh6TXFkUT09GAAgACgAMJLz0qrTkY0DOABAAEocb1BWa2h3QlJiVjY1S0NXUjIrSU9OSFdvT3U4PVoAZQAAAAASwwEIAxK+AQocbmpnRHU4OGVDcnZYcDg2cEQ3ZkhHY3FGcDg4PRJmWjpBRHF0QVp3TkNRVmpVbFRWRnExMDN3T3pqQnVGNmJEKzNoaXZ0TjREZXk5dmtFQkxsc2c4ZVRiSmRBQkR4VEQwWDd5a3RGd0RYRDNFMnk3eE10NmFzVTdJbjN3VWpqYmMxdz09GAAgACgAMJLz0qrTkY0DOABAAEoceXpOQjAxY241NEE3Y1JVMHVUKy9QZ21UdFVvPVoAZQAAAAAS6wEIBRLmAQocQ2VoUm0rSFRGRStrRVAyVVVlYUF4N3JvUDdrPRJmWjpBRHF0QVp5eVJPYi9rUnNwZlFZbFBMODByeWR1SXFNRDZibGJkTUdLV3BIYlFtSVRTOWdHK1FhRVBCMEN1RVlhcDRIakJyaGl3MEVDa0VUOTJCMmN2Zk5sZVZVeTdXc2diZz09GAAgACgAMNHJwvTKzYwDOMT2+MrdMkDE9vjK3TJKHHIxb1RmK2VYK3FiTUp4M0VXYmI2YXU3L2xaQT1aHiIcY1k3K0VNNENwa0ZVUVBuckpPSHZzRGx6d0dJPWXPMg8JEqsBCAESpgEKHHl4Si82ZnZrZWNyN2twNUVRekI0dFdMcGRiRT0STlo6QURxdEFaeWI0TnhLUzY4WXpEaDZXSTAzTVloMG9LcUxvTFJCZTZkeXFNTHhTaWZzaEdMU2dDUDFpMnNRTGR3akFHc1R4VEJob0JlOBgAIAAoADCS89Kq05GNAzgAQABKHGFSQ1dMZ2hGOWI1SW5xS0lEdnVKL2p2UWtGYz1aAGUAAAAAMAE4AA==",
+   "version": 1
+}
