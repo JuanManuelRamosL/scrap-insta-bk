@@ -169,41 +169,43 @@ def esperar(min_s=2, max_s=4):
 
 def transcribir_audio_desde_video(url):
     temp_filename = f"temp_{uuid.uuid4()}.mp4"
+
     try:
         ydl_opts = {
             'outtmpl': temp_filename,
             'format': 'mp4',
             'quiet': True,
         }
+
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             ydl.download([url])
+
         result = modelo_whisper.transcribe(temp_filename)
         return result.get("text", "").strip()
+
     except Exception as e:
         print(f"Error al transcribir {url}: {e}")
         return ""
+
     finally:
         if os.path.exists(temp_filename):
             os.remove(temp_filename)
 
-def iniciar_driver():
+def scrape_n_reels(username: str, cantidad: int = 2):
     options = webdriver.ChromeOptions()
     profile_path = os.path.expanduser("~/Desktop/scraper-api/chrome_profile")
     options.add_argument(f"--user-data-dir={profile_path}")
     options.add_argument("--start-maximized")
-    options.add_argument(f"--user-agent={ua.random}")
-    return webdriver.Chrome(options=options)
 
-def scrape_n_reels(username: str, cantidad: int = 2):
-    driver = iniciar_driver()
+    driver = webdriver.Chrome(options=options)
     driver.get(f"https://www.instagram.com/{username}/reels/")
-    esperar()
+    esperar(4, 6)
 
     reels_data = []
     cards = driver.find_elements(By.XPATH, '//a[contains(@href, "/reel/")]')[:cantidad]
 
     if not cards:
-        print("⚠ No se encontraron reels.")
+        print("⚠ No se encontraron reels. ¿Estás logueado en Instagram en este perfil?")
         driver.quit()
         return []
 
@@ -223,7 +225,7 @@ def scrape_n_reels(username: str, cantidad: int = 2):
 
         driver.execute_script("window.open(arguments[0]);", url)
         driver.switch_to.window(driver.window_handles[1])
-        esperar()
+        esperar(4, 6)
 
         title = ""
         likes = "N/A"
@@ -256,6 +258,7 @@ def scrape_n_reels(username: str, cantidad: int = 2):
             WebDriverWait(driver, 10).until(
                 lambda d: len(d.find_elements(By.CSS_SELECTOR, 'li._a9zj._a9zl')) >= 1
             )
+
             comment_elements = driver.find_elements(By.CSS_SELECTOR, 'li._a9zj._a9zl')
             for el in comment_elements[:5]:
                 try:
@@ -281,9 +284,7 @@ def scrape_n_reels(username: str, cantidad: int = 2):
 
         driver.close()
         driver.switch_to.window(driver.window_handles[0])
-        # 🧠 Espera aleatoria entre reels para simular comportamiento humano
-        esperar(2, 5)
-        
+
     driver.quit()
     return reels_data
 
@@ -295,22 +296,28 @@ def scrape_instagram_reels(username: str = Query(...), cantidad: int = Query(2))
         "reels": scrape_n_reels(username, cantidad)
     }
 
+
 @app.get("/scrape-posts")
 def scrape_instagram_posts(username: str = Query(...), cantidad: int = Query(3)):
-    driver = iniciar_driver()
+    options = webdriver.ChromeOptions()
+    profile_path = os.path.expanduser("~/Desktop/scraper-api/chrome_profile")
+    options.add_argument(f"--user-data-dir={profile_path}")
+    options.add_argument("--start-maximized")
+    options.add_argument(f"--user-agent={ua.random}")
+    driver = webdriver.Chrome(options=options)
+
     driver.get(f"https://www.instagram.com/{username}/")
-    esperar(5, 7)
+    esperar(4, 6)
 
     posts_data = []
     cards = driver.find_elements(By.XPATH, '//a[contains(@href, "/p/")]')[:cantidad]
-
     if not cards:
         print("⚠ No se encontraron publicaciones.")
         driver.quit()
         return []
 
     for card in cards:
-        url = card.get_attribute('href')
+        url = card.get_attribute("href")
         driver.execute_script("window.open(arguments[0]);", url)
         driver.switch_to.window(driver.window_handles[1])
         esperar(4, 6)
@@ -319,8 +326,8 @@ def scrape_instagram_posts(username: str = Query(...), cantidad: int = Query(3))
         likes = "N/A"
         fecha = "N/A"
         comentarios = []
-        transcripcion = ""
-        reproducciones = "N/A"
+        transcripcion = None
+        reproducciones = None
         tipo = "imagen"
 
         try:
@@ -370,7 +377,7 @@ def scrape_instagram_posts(username: str = Query(...), cantidad: int = Query(3))
                     view_elem = driver.find_element(By.XPATH, '//section//span[contains(text(),"reproducciones") or contains(text(),"views")]')
                     reproducciones = view_elem.text.strip()
                 except:
-                    reproducciones = "N/A"
+                    reproducciones = None
                 transcripcion = transcribir_audio_desde_video(url)
 
         except Exception as e:
@@ -381,10 +388,10 @@ def scrape_instagram_posts(username: str = Query(...), cantidad: int = Query(3))
             "tipo": tipo,
             "titulo": title,
             "likes": likes,
-            "reproducciones": reproducciones if tipo == "video" else None,
+            "reproducciones": reproducciones,
             "fecha": fecha,
             "comentarios": comentarios,
-            "transcripcion": transcripcion if tipo == "video" else None
+            "transcripcion": transcripcion
         })
 
         driver.close()
