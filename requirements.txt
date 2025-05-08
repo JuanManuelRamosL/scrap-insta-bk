@@ -7,3 +7,4 @@ whisper
 yt-dlp
 torch
 openai-whisper
+fake-useragent
