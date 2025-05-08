@@ -139,6 +139,8 @@ from selenium.webdriver.support import expected_conditions as EC
 import time
 import random
 
+
+
 app = FastAPI()
 
 # ✅ CORS habilitado para todos los orígenes
@@ -157,8 +159,15 @@ def scrape_n_reels(username: str, cantidad: int = 2):
     options = webdriver.ChromeOptions()
 
     # 🧠 Usamos el mismo perfil persistente que en el .bat
-    options.add_argument("--user-data-dir=C:/Users/LEBROT/Desktop/scraper-api/chrome_profile")
+    # options.add_argument("--user-data-dir=C:/Users/LEBROT/Desktop/scraper-api/chrome_profile")
+    # options.add_argument("--start-maximized")
+    options = webdriver.ChromeOptions()
+    import os
+    profile_path = os.path.expanduser("~/Desktop/scraper-api/chrome_profile")
+    options.add_argument(f"--user-data-dir={profile_path}")
     options.add_argument("--start-maximized")
+ 
+
 
     driver = webdriver.Chrome(options=options)
     driver.get(f"https://www.instagram.com/{username}/reels/")
@@ -258,3 +267,12 @@ def scrape_instagram_reels(username: str = Query(...), cantidad: int = Query(2))
 
 
 #--user-data-dir=C:\Users\LEBROT\Desktop\scraper-api\chrome_profile
+
+# Forma de usar 
+# poner este comando en la cmd = start "" "C:\Program Files\Google\Chrome\Application\chrome.exe" --user-data-dir="C:\Users\ezequ\Desktop\scraper-api\chrome_profile" https://www.instagram.com/
+# te va a abrir una ventana de chrome te logueas con 
+# juanm@agencialebrot.com
+# psw = Juanma42680
+# y despues te logueas en instgram con user: ezepruebaslb y psw: juanma42680  
+
+#endpoint de prueba GET : http://localhost:8000/scrape?username=leomessi&cantidad=1
