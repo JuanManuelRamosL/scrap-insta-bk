@@ -3,3 +3,7 @@ uvicorn
 selenium
 fastapi[all]
 webdriver-manager
+whisper
+yt-dlp
+torch
+openai-whisper
