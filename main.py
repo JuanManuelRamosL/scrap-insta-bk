@@ -294,6 +294,121 @@ def scrape_instagram_reels(username: str = Query(...), cantidad: int = Query(2))
     }
 
 
+
+#PUBLICACIONES
+
+@app.get("/scrape-posts")
+def scrape_instagram_posts(username: str = Query(...), cantidad: int = Query(3)):
+    options = webdriver.ChromeOptions()
+    profile_path = os.path.expanduser("~/Desktop/scraper-api/chrome_profile")
+    options.add_argument(f"--user-data-dir={profile_path}")
+    options.add_argument("--start-maximized")
+
+    driver = webdriver.Chrome(options=options)
+    driver.get(f"https://www.instagram.com/{username}/")
+    esperar(5, 7)
+
+    posts_data = []
+    cards = driver.find_elements(By.XPATH, '//a[contains(@href, "/p/")]')[:cantidad]
+
+    if not cards:
+        print("⚠ No se encontraron publicaciones.")
+        driver.quit()
+        return []
+
+    for card in cards:
+        url = card.get_attribute('href')
+
+        driver.execute_script("window.open(arguments[0]);", url)
+        driver.switch_to.window(driver.window_handles[1])
+        esperar(4, 6)
+
+        title = ""
+        likes = "N/A"
+        fecha = "N/A"
+        comentarios = []
+        transcripcion = ""
+        reproducciones = "N/A"
+        tipo = "imagen"
+
+        try:
+            # ¿Es video?
+            is_video = len(driver.find_elements(By.TAG_NAME, "video")) > 0
+            if is_video:
+                tipo = "video"
+
+            # Título
+            try:
+                title_elem = driver.find_element(By.XPATH, '//div[contains(@class,"_a9zs")]/span')
+                title = title_elem.text.strip()
+            except:
+                pass
+
+            # Likes
+            try:
+                likes_elem = driver.find_element(By.XPATH, '//section//span[contains(text(),"Me gusta") or contains(text(),"likes")]')
+                likes = likes_elem.text.strip()
+            except:
+                pass
+
+            # Fecha
+            try:
+                time_elem = driver.find_element(By.TAG_NAME, "time")
+                fecha = time_elem.get_attribute("datetime")
+            except:
+                pass
+
+            # Comentarios
+            try:
+                for _ in range(5):
+                    driver.execute_script("window.scrollBy(0, 200);")
+                    esperar(1, 2)
+
+                WebDriverWait(driver, 10).until(
+                    lambda d: len(d.find_elements(By.CSS_SELECTOR, 'li._a9zj._a9zl')) >= 1
+                )
+                comment_elements = driver.find_elements(By.CSS_SELECTOR, 'li._a9zj._a9zl')
+                for el in comment_elements[:5]:
+                    try:
+                        user = el.find_element(By.CSS_SELECTOR, 'h3 a').text
+                        texto = el.find_element(By.CSS_SELECTOR, 'div._a9zr > div').text
+                        comentarios.append(f"{user}: {texto}")
+                    except:
+                        continue
+            except:
+                comentarios = []
+
+            # Reproducciones si es video
+            if is_video:
+                try:
+                    view_elem = driver.find_element(By.XPATH, '//section//span[contains(text(),"reproducciones") or contains(text(),"views")]')
+                    reproducciones = view_elem.text.strip()
+                except:
+                    reproducciones = "N/A"
+
+                transcripcion = transcribir_audio_desde_video(url)
+
+        except Exception as e:
+            print(f"⚠ Error en {url}: {e}")
+
+        posts_data.append({
+            "url": url,
+            "tipo": tipo,
+            "titulo": title,
+            "likes": likes,
+            "reproducciones": reproducciones if tipo == "video" else None,
+            "fecha": fecha,
+            "comentarios": comentarios,
+            "transcripcion": transcripcion if tipo == "video" else None
+        })
+
+        driver.close()
+        driver.switch_to.window(driver.window_handles[0])
+
+    driver.quit()
+    return {"perfil": username, "cantidad": cantidad, "posts": posts_data}
+
+
 #--user-data-dir=C:\Users\LEBROT\Desktop\scraper-api\chrome_profile
 # pip install git+https://github.com/openai/whisper.git
 # https://www.gyan.dev/ffmpeg/builds/  de ahi instalar  ffmpeg-release-full.7z  descomprimirlo y agregarlo al path del sistema
